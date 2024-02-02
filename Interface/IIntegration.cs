@@ -5,7 +5,7 @@ namespace Google.Drive.Integration.Interface
     public interface IIntegration
     {
         /// <summary>
-        /// Create a folder on the give Drive Id <br/>
+        /// Create a folder on the given Drive Id <br/>
         /// If the 'parentId' is null, the folder will be created on the drive's root
         /// </summary>
         /// <param name="driveId">Drive Id where the folder will be created</param>
