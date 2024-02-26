@@ -5,5 +5,5 @@ This project should contain the most important methods from the Google Drive API
 
 
 PT-BR:
-Eu modifiquei e traduzi os summarys para inglês, à partir do projeot que utilizo atualmente no trabalho. <br/>
+Eu modifiquei e traduzi os summarys para inglês, à partir do projeto que utilizo atualmente no trabalho. <br/>
 Esse projeto deve conter os métodos mais importantes e utilziados da  API do Google Drive
