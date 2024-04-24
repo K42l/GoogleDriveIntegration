@@ -50,7 +50,6 @@ namespace Google.Drive.Integration.Interface
         /// <param name="parentId">Parent Id where the folders should be searched. If is null, will search the entire drive</param>
         /// <returns>
         /// If 'containsName' and 'name' are null, will return all the files<br/>
-        /// Se a 'parentId' não for informado, trará todas as pastas do drive.<br/>
         /// If 'parentId' is null, will return all folders on the drive that match the others params
         /// </returns>
         Task<List<Google.Apis.Drive.v3.Data.File>> GetFoldersAsync(string driveId, string[]? containsName = null, string? name = null, string? parentId = null);
