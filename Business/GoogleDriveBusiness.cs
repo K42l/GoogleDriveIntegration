@@ -36,13 +36,17 @@ namespace Google.Drive.Integration.Business
         /// <param name="containsName">Array with the names that the file/folder can contain.</param>
         /// <param name="name">File/Folder exact name</param>
         /// <param name="parentId">File/Folder parent id</param>
+        /// <param name="trashed">Include trashed files; Default = false</param> 
+        /// <param name="fields">Specify the response fields</param> 
         /// <returns>The FilesResource.ListRequest with the query.</returns>
         public FilesResource.ListRequest SetQuerysRequest(FilesResource.ListRequest listRequest, 
                                                           string driveId,
                                                           string? requestType = null,  
                                                           string[]? containsName = null, 
                                                           string? name = null, 
-                                                          string? parentId = null)
+                                                          string? parentId = null,
+                                                          bool trashed = false,
+                                                          string? fields = null)
         {
             listRequest.Q = $"mimeType!='application/vnd.google-apps.folder'";
             if(requestType == "folder")
@@ -54,8 +58,10 @@ namespace Google.Drive.Integration.Business
             if (containsName != null )
                 foreach (var item in containsName)
                     listRequest.Q += $" and fullText contains '{item}'";
-            listRequest.Q += " and trashed=false";
-            listRequest.Fields = "nextPageToken, files(id, name, size, mimeType, parents)";
+            listRequest.Q += $" and trashed={trashed}";
+            listRequest.Fields = "nextPageToken, files(id, name, size, mimeType, parents, createdTime, modifiedTime)";
+            if (!String.IsNullOrEmpty(fields))
+                listRequest.Fields = fields;
             listRequest.IncludeItemsFromAllDrives = true;
             listRequest.Corpora = "drive";
             listRequest.SupportsAllDrives = true;
