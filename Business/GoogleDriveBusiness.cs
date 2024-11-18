@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.StaticFiles;
 
 namespace Google.Drive.Integration.Business
 {
-    public class GoogleDriveBusiness
+    public static class GoogleDriveBusiness
     {
 
         /// <summary>
@@ -11,7 +11,7 @@ namespace Google.Drive.Integration.Business
         /// </summary>
         /// <param name="fileName">Full filename to be verified*</param>
         /// <returns>String containing the Mime Type</returns>
-        public string GetMimeType(string fileName)
+        public static string GetMimeType(string fileName)
         {
             string contentType;
             try
@@ -39,7 +39,7 @@ namespace Google.Drive.Integration.Business
         /// <param name="trashed">Include trashed files; Default = false</param> 
         /// <param name="fields">Specify the response fields</param> 
         /// <returns>The FilesResource.ListRequest with the query.</returns>
-        public FilesResource.ListRequest SetQuerysRequest(FilesResource.ListRequest listRequest, 
+        public static FilesResource.ListRequest SetQuerysRequest(FilesResource.ListRequest listRequest, 
                                                           string driveId,
                                                           string? requestType = null,  
                                                           string[]? containsName = null, 

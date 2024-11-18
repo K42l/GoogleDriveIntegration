@@ -5,7 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace Google.Drive.Integration.Connection
 {
-    public class ConnectionServiceAccount
+    public static class ConnectionServiceAccount
     {
         /// <summary>
         /// Creates the connection that will be used during the application
@@ -14,7 +14,7 @@ namespace Google.Drive.Integration.Connection
         /// <param name="credentialFilePath">String with the path to the credential file of the service account*</param>
         /// <param name="emailServiceAccount">String with the service account's email. Required only when using .p12 file</param>
         /// <exception cref="Exception"></exception>
-        public DriveService CreateConnection(string applicationName, string credentialFilePath, string? emailServiceAccount = null)
+        public static DriveService CreateConnection(string applicationName, string credentialFilePath, string? emailServiceAccount = null)
         {
             DriveService service = new DriveService();
             try

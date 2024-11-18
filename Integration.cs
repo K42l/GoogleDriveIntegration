@@ -11,11 +11,9 @@ namespace Google.Drive.Integration
     public class Integration : IIntegration
     {
         private DriveService service { get; set; }
-        private GoogleDriveBusiness googleDriveBusiness = new GoogleDriveBusiness();
         public Integration(string applicationName, string credentialFilePath, string? emailServiceAccount = null)
         {
-            ConnectionServiceAccount connectionServiceAccount= new();
-            service = connectionServiceAccount.CreateConnection(applicationName, credentialFilePath, emailServiceAccount);
+            service = ConnectionServiceAccount.CreateConnection(applicationName, credentialFilePath, emailServiceAccount);
         }
 
         public async Task<GoogleFile> CreateFolderAsync(string driveId, string folderName, string? parentId = null)
@@ -24,7 +22,7 @@ namespace Google.Drive.Integration
             {
                 if (!String.IsNullOrEmpty(folderName))
                 {
-                    var driveFolder = new GoogleFile()
+                    GoogleFile driveFolder = new()
                     {
                         DriveId = driveId,
                         Name = folderName,
@@ -57,7 +55,7 @@ namespace Google.Drive.Integration
         {
             try
             {
-                string fileMime = googleDriveBusiness.GetMimeType(fileName);
+                string fileMime = GoogleDriveBusiness.GetMimeType(fileName);
                 GoogleFile driveFile = new()
                 {
                     DriveId = driveId,
@@ -94,7 +92,7 @@ namespace Google.Drive.Integration
             {
                 var list = service.Files.List();
                 var requestType = "file";
-                var fileList = googleDriveBusiness.SetQuerysRequest(list, requestType, driveId, containsName, name, parentId);
+                var fileList = GoogleDriveBusiness.SetQuerysRequest(list, requestType, driveId, containsName, name, parentId);
 
                 var result = new List<GoogleFile>();
                 string pageToken = null;
@@ -122,7 +120,7 @@ namespace Google.Drive.Integration
             {
                 var list = service.Files.List();
                 var requestType = "folder";
-                var folderList = googleDriveBusiness.SetQuerysRequest(list, requestType, driveId, containsName, name, parentId);
+                var folderList = GoogleDriveBusiness.SetQuerysRequest(list, requestType, driveId, containsName, name, parentId);
 
                 var result = new List<GoogleFile>();
                 string? pageToken = null;
