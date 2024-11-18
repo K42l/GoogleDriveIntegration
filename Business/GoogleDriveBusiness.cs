@@ -9,7 +9,7 @@ namespace Google.Drive.Integration.Business
         /// <summary>
         /// Method to get the MimeType using the AspNetCore StaticFiles Package.<br/>
         /// </summary>
-        /// <param name="fileName">Full filename to be verifiyed*</param>
+        /// <param name="fileName">Full filename to be verified*</param>
         /// <returns>String containing the Mime Type</returns>
         public string GetMimeType(string fileName)
         {
@@ -44,7 +44,7 @@ namespace Google.Drive.Integration.Business
                                                           string? name = null, 
                                                           string? parentId = null)
         {
-            listRequest.Q = $"mimeType!='application/vnd.google-apps.file'";
+            listRequest.Q = $"mimeType!='application/vnd.google-apps.folder'";
             if(requestType == "folder")
                 listRequest.Q = $"mimeType='application/vnd.google-apps.folder'";
             if (!String.IsNullOrEmpty(parentId))
