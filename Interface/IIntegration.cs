@@ -1,4 +1,5 @@
 ﻿using Google.Apis.Drive.v3.Data;
+using GoogleFile = Google.Apis.Drive.v3.Data.File;
 
 namespace Google.Drive.Integration.Interface
 { 
@@ -12,7 +13,7 @@ namespace Google.Drive.Integration.Interface
         /// <param name="folderName">Folder's name</param>
         /// <param name="parentId">Parent Id</param>
         /// <returns>Details of the created folder</returns>
-        Task<Google.Apis.Drive.v3.Data.File> CreateFolderAsync(string driveId, string folderName, string? parentId = null);
+        Task<GoogleFile> CreateFolderAsync(string driveId, string folderName, string? parentId = null);
 
         /// <summary>
         /// Upload the file Stream file<br/>
@@ -26,7 +27,7 @@ namespace Google.Drive.Integration.Interface
         /// <returns>
         /// The details of the file that was sent
         /// </returns>
-        Task<Google.Apis.Drive.v3.Data.File> UploadFileAsync(string driveId, Stream file, string fileName, string? parentId = null, string? fileDescription = null);
+        Task<GoogleFile> UploadFileAsync(string driveId, Stream file, string fileName, string? parentId = null, string? fileDescription = null);
 
         /// <summary>
         /// Search files on the given Drive<br/>
@@ -39,7 +40,7 @@ namespace Google.Drive.Integration.Interface
         /// If 'containsName' and 'name' are null, will return all the files<br/>
         /// If 'parentId' is null, will return all the files that match the others params.<br/>
         /// </returns>
-        Task<List<Google.Apis.Drive.v3.Data.File>> GetFilesAsync(string driveId, string[]? containsName = null, string? name = null, string? parentId = null);
+        Task<List<GoogleFile>> ListFilesAsync(string driveId, string[]? containsName = null, string? name = null, string? parentId = null);
 
         /// <summary>
         /// Search folders on the drive<br/>
@@ -52,7 +53,7 @@ namespace Google.Drive.Integration.Interface
         /// If 'containsName' and 'name' are null, will return all the files<br/>
         /// If 'parentId' is null, will return all folders on the drive that match the others params
         /// </returns>
-        Task<List<Google.Apis.Drive.v3.Data.File>> GetFoldersAsync(string driveId, string[]? containsName = null, string? name = null, string? parentId = null);
+        Task<List<GoogleFile>> ListFoldersAsync(string driveId, string[]? containsName = null, string? name = null, string? parentId = null);
 
         /// <summary>
         /// Search all drives that are been shared with the service account being used by the application
@@ -69,6 +70,13 @@ namespace Google.Drive.Integration.Interface
         /// <returns>
         /// The file in a byte array
         /// </returns>
-        Task<byte[]> DriveDownloadFileAsync(string fileId);
+        Task<byte[]> DownloadFileAsync(string fileId);
+
+        /// <summary>
+        /// Gets a file's metadata by ID
+        /// </summary>
+        /// <param name="fileId"></param>
+        /// <returns></returns>
+        Task<GoogleFile> GetFileInfoAsync(string fileId);
     }
 }

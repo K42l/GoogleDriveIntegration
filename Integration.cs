@@ -1,5 +1,6 @@
 ﻿using Google.Apis.Drive.v3;
 using Google.Apis.Drive.v3.Data;
+using GoogleFile = Google.Apis.Drive.v3.Data.File;
 using Google.Apis.Download;
 using Google.Drive.Integration.Business;
 using Google.Drive.Integration.Connection;
@@ -13,17 +14,17 @@ namespace Google.Drive.Integration
         private GoogleDriveBusiness googleDriveBusiness = new GoogleDriveBusiness();
         public Integration(string applicationName, string credentialFilePath, string? emailServiceAccount = null)
         {
-            ConnectionServiceAccount connectionServiceAccount= new ConnectionServiceAccount();
+            ConnectionServiceAccount connectionServiceAccount= new();
             service = connectionServiceAccount.CreateConnection(applicationName, credentialFilePath, emailServiceAccount);
         }
 
-        public async Task<Google.Apis.Drive.v3.Data.File> CreateFolderAsync(string driveId, string folderName, string? parentId = null)
+        public async Task<GoogleFile> CreateFolderAsync(string driveId, string folderName, string? parentId = null)
         {
             try
             {
                 if (!String.IsNullOrEmpty(folderName))
                 {
-                    var driveFolder = new Google.Apis.Drive.v3.Data.File()
+                    var driveFolder = new GoogleFile()
                     {
                         DriveId = driveId,
                         Name = folderName,
@@ -43,7 +44,7 @@ namespace Google.Drive.Integration
                 }
                 else
                 {
-                    throw new Exception("folderName nulo ou vazio");
+                    throw new Exception("Param folderName is null or empty");
                 }
             }
             catch (Exception)
@@ -52,12 +53,12 @@ namespace Google.Drive.Integration
             }
         }
 
-        public async Task<Google.Apis.Drive.v3.Data.File> UploadFileAsync(string driveId, Stream file, string fileName, string? parentId = null, string? fileDescription = null)
+        public async Task<GoogleFile> UploadFileAsync(string driveId, Stream file, string fileName, string? parentId = null, string? fileDescription = null)
         {
             try
             {
                 string fileMime = googleDriveBusiness.GetMimeType(fileName);
-                var driveFile = new Google.Apis.Drive.v3.Data.File()
+                GoogleFile driveFile = new()
                 {
                     DriveId = driveId,
                     Name = fileName,
@@ -87,7 +88,7 @@ namespace Google.Drive.Integration
             }
         }
 
-        public async Task<List<Google.Apis.Drive.v3.Data.File>> GetFilesAsync(string driveId, string[]? containsName = null, string? name = null,string? parentId = null)
+        public async Task<List<GoogleFile>> ListFilesAsync(string driveId, string[]? containsName = null, string? name = null,string? parentId = null)
         {
             try
             {
@@ -95,7 +96,7 @@ namespace Google.Drive.Integration
                 var requestType = "file";
                 var fileList = googleDriveBusiness.SetQuerysRequest(list, requestType, driveId, containsName, name, parentId);
 
-                var result = new List<Google.Apis.Drive.v3.Data.File>();
+                var result = new List<GoogleFile>();
                 string pageToken = null;
                 do
                 {
@@ -115,7 +116,7 @@ namespace Google.Drive.Integration
             }
         }
 
-        public async Task<List<Google.Apis.Drive.v3.Data.File>> GetFoldersAsync(string driveId, string[]? containsName = null, string? name = null,string? parentId = null)
+        public async Task<List<GoogleFile>> ListFoldersAsync(string driveId, string[]? containsName = null, string? name = null,string? parentId = null)
         {
             try
             {
@@ -123,7 +124,7 @@ namespace Google.Drive.Integration
                 var requestType = "folder";
                 var folderList = googleDriveBusiness.SetQuerysRequest(list, requestType, driveId, containsName, name, parentId);
 
-                var result = new List<Google.Apis.Drive.v3.Data.File>();
+                var result = new List<GoogleFile>();
                 string? pageToken = null;
                 do
                 {
@@ -149,8 +150,7 @@ namespace Google.Drive.Integration
             {
                 var request = service.Teamdrives.List();
                 request.PageSize = 100;
-                var response = await request.ExecuteAsync();
-                return response;
+                return await request.ExecuteAsync();
             }
             catch (Exception)
             {
@@ -158,36 +158,48 @@ namespace Google.Drive.Integration
             }
         }
 
-        public async Task<byte[]> DriveDownloadFileAsync(string fileId)
+        public async Task<byte[]> DownloadFileAsync(string fileId)
         {
             try { 
                 var request = service.Files.Get(fileId);
                 request.SupportsAllDrives = true;
-                //string base64String;
 
                 using (MemoryStream stream = new MemoryStream())
                 {
                     // Add a handler which will be notified on progress changes.
-                    // It will notify on each chunk download and when the
-                    // download is completed or failed.
+                    // It will notify if download fail.
                     request.MediaDownloader.ProgressChanged +=
                         progress =>
                         {
                             if (progress.Status == DownloadStatus.Failed)
                             {
-                                throw new Exception("Falha no download");
+                                throw new Exception("Download failed.");
                             }
                         };
                     await request.DownloadAsync(stream);
 
                     var fileBytes = stream.ToArray();
-                    //base64String = Convert.ToBase64String(fileBytes, 0, fileBytes.Length);
                     return fileBytes;
                 }
-                //return base64String;
             }
             catch (Exception)
             {
+                throw;
+            }
+        }
+
+        public async Task<GoogleFile> GetFileInfoAsync(string fileId)
+        {
+            try
+            {
+                var request = service.Files.Get(fileId);
+                request.SupportsAllDrives = true;
+
+                return await request.ExecuteAsync();
+            }
+            catch (Exception)
+            {
+
                 throw;
             }
         }
